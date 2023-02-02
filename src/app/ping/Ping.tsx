@@ -7,13 +7,16 @@ export default function Ping({ data: hosts, children }: IPing) {
   const [statusHost, setStatusHost] = useState<IStatus>({})
 
   useEffect(() => {
+    socket.connect()
     for (const ip of hosts) {
+      console.log(ip)
+
       socket.on(ip.hostName, data => {
         setStatusHost(prevData => ({ ...prevData, [ip.hostName]: data }))
       })
     }
     return () => {
-      socket.removeAllListeners()
+      socket.disconnect()
     }
   }, [hosts])
   return (
