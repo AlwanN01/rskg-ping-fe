@@ -6,5 +6,10 @@ const getData = async () => {
 }
 export default async function Page() {
   const { data } = await getData()
-  return <Ping data={data} />
+  return (
+    <>
+      {/* <PingRefresh /> */}
+      <Ping data={data} />
+    </>
+  )
 }

@@ -1,11 +1,11 @@
 'use client'
 import { useState, useEffect } from 'react'
 import socket from './socket'
+import { useRouter } from 'next/navigation'
 
 export default function Ping({ data: hosts, children }: IPing) {
   // const [hosts, setHosts] = useState(data)
   const [statusHost, setStatusHost] = useState<IStatus>({})
-
   useEffect(() => {
     socket.connect()
     for (const ip of hosts) {
@@ -15,6 +15,7 @@ export default function Ping({ data: hosts, children }: IPing) {
         setStatusHost(prevData => ({ ...prevData, [ip.hostName]: data }))
       })
     }
+
     return () => {
       socket.disconnect()
     }
@@ -55,4 +56,9 @@ interface IPing {
 
 interface IStatus {
   [key: string]: { status: string; updatedAt: Date }
+}
+
+export const PingRefresh = () => {
+  const router = useRouter()
+  return <button onClick={() => router.refresh()}>Refresh Data</button>
 }

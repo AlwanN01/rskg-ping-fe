@@ -7,7 +7,9 @@ export default function Page() {
   const [issues, setIssues] = useState<any[]>([])
   const form = useForm<InitValue>({
     validate: {
-      hostName: isNotEmpty('nama Host/IP wajib diisi')
+      hostName: isNotEmpty('nama Host/IP wajib diisi'),
+      divisi: isNotEmpty('nama Divisi wajib diisi'),
+      user: isNotEmpty('nama User wajib diisi')
     }
   })
   const handleSubmit = async (values: InitValue) => {
