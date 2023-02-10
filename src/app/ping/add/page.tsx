@@ -13,8 +13,6 @@ export default function Page() {
     }
   })
   const handleSubmit = async (values: InitValue) => {
-    console.log(values)
-
     try {
       const res = await fetch('http://localhost:3001/host', {
         method: 'post',

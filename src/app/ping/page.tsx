@@ -1,7 +1,7 @@
 import Ping from './Ping'
 
 const getData = async () => {
-  const res = await fetch('http://localhost:3001/host/?allAtributes=true')
+  const res = await fetch('http://localhost:3001/host/?allAtributes=true', { cache: 'no-store' })
   return res.json()
 }
 export default async function Page() {
