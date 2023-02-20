@@ -49,12 +49,12 @@ export default function Ping({ data: hosts, children }: IPing) {
   )
 }
 
-interface IPing {
+type IPing = {
   data: { id: number; hostName: string; user: string; divisi: string }[]
   children?: React.ReactNode
 }
 
-interface IStatus {
+type IStatus = {
   [key: string]: { status: string; updatedAt: Date }
 }
 
