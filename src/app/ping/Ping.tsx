@@ -2,13 +2,33 @@
 import { useRouter } from 'next/navigation'
 import { usePing } from './hooks/usePing'
 import { type DataHost } from './page'
-import { Container, Pagination, Table, NumberInput, Group } from '@mantine/core'
+import { Container, Pagination, Table, NumberInput, Group, ActionIcon, type NumberInputHandlers } from '@mantine/core'
+import { useRef } from 'react'
 
 type IPing = { data: DataHost[]; children?: React.ReactNode }
 export default function Ping({ data }: IPing) {
-  const { hosts, limit, setLimit, activePage, setActivePage, totalPage } = usePing(data)
+  const { hosts, setLimit, activePage, setActivePage, totalPage } = usePing(data)
+  const handlers = useRef<NumberInputHandlers>()
+
   return (
     <Container size={'xl'}>
+      <Group>
+        <ActionIcon size={35} variant='default' onClick={() => handlers.current!.decrement()}>
+          -
+        </ActionIcon>
+        <NumberInput
+          hideControls
+          handlersRef={handlers}
+          min={1}
+          max={data.length}
+          defaultValue={data.length > 10 ? 10 : data.length}
+          onChange={setLimit}
+          styles={{ input: { width: 80, textAlign: 'center' } }}
+        />
+        <ActionIcon size={35} variant='default' onClick={() => handlers.current!.increment()}>
+          +
+        </ActionIcon>
+      </Group>
       <Table>
         <thead>
           <tr>
@@ -34,10 +54,7 @@ export default function Ping({ data }: IPing) {
           })}
         </tbody>
       </Table>
-      <Group>
-        <NumberInput type='number' radius={'sm'} w={60} min={1} max={Math.ceil(data.length / limit)} value={10} onChange={setLimit} />
-        <Pagination page={activePage} onChange={setActivePage} total={totalPage} />
-      </Group>
+      <Pagination size={'lg'} page={activePage} onChange={setActivePage} total={totalPage} />
     </Container>
   )
 }
