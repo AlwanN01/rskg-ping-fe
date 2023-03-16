@@ -22,7 +22,7 @@ type Options = {
 }
 export function createStore<State extends object, Method extends object, Action extends { type: unknown; [key: string]: any }>(
   initState: State,
-  handler: HandlerStore<State, Method> | null,
+  handler?: HandlerStore<State, Method> | null,
   reducerOrOptions: ReducerStore<State, Action> | Options = {},
   options: Options = {}
 ) {
