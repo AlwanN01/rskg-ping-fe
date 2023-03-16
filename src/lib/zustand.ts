@@ -1,6 +1,6 @@
 'use client'
-import { create, StoreApi, UseBoundStore } from 'zustand'
-import { combine, persist, devtools, StateStorage, createJSONStorage } from 'zustand/middleware'
+import { create, type StoreApi, type UseBoundStore } from 'zustand'
+import { combine, devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { Immutable, produce } from 'immer'
 import type { Draft } from 'immer'
@@ -48,7 +48,9 @@ export function createStore<State extends object, Method extends object, Action 
     )
   )
 }
-
+function isOptions(variable: any): variable is Options {
+  return Object.prototype.toString.call(variable) === '[object Object]'
+}
 type WithSelectors<S> = S extends { getState: () => infer T } ? S & { use: { [K in keyof T]: () => T[K] } } : never
 export function createSelectors<S extends UseBoundStore<StoreApi<object>>>(_store: S) {
   let store = _store as WithSelectors<typeof _store>
@@ -59,9 +61,7 @@ export function createSelectors<S extends UseBoundStore<StoreApi<object>>>(_stor
 
   return store
 }
-function isOptions(variable: any): variable is Options {
-  return Object.prototype.toString.call(variable) === '[object Object]'
-}
+
 export type TypeSetState<T> = Partial<{
   [K in keyof T as `set${Capitalize<string & K>}`]: (value: any) => void
   // [K in keyof T as `set${Capitalize<string & K>}`]: (value:T[K]) => void

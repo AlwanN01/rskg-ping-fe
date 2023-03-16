@@ -1,11 +1,18 @@
 import Ping from './Ping'
-
-const getData = async () => {
+import type { ResBE } from '@/types/response'
+export interface DataHost {
+  id: number
+  hostName: string
+  user: string
+  divisi: string
+}
+const getData = async (): Promise<ResBE<DataHost[]>> => {
   const res = await fetch('http://localhost:3001/host/?allAtributes=true', { cache: 'no-store' })
   return res.json()
 }
 export default async function Page() {
-  const { data } = await getData()
+  const { data, error } = await getData()
+  if (!data) throw error
   return (
     <>
       {/* <PingRefresh /> */}

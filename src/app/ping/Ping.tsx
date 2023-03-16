@@ -1,7 +1,9 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { type Host, usePing } from './hooks/usePing'
+import { usePing } from './hooks/usePing'
+import { type DataHost } from './page'
 
+type IPing = { data: DataHost[]; children?: React.ReactNode }
 export default function Ping({ data }: IPing) {
   const { hosts } = usePing(data)
   return (
@@ -17,7 +19,7 @@ export default function Ping({ data }: IPing) {
       </thead>
       <tbody>
         {hosts.map(host => {
-          const updateAt = host.updatedAt && new Date(host.updatedAt).toLocaleDateString()
+          const updateAt = host.updatedAt && new Date(host.updatedAt).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'long' })
           return (
             <tr key={host.id}>
               <td>{host.hostName}</td>
@@ -33,10 +35,6 @@ export default function Ping({ data }: IPing) {
   )
 }
 
-type IPing = {
-  data: Host[]
-  children?: React.ReactNode
-}
 export const PingRefresh = () => {
   const router = useRouter()
   return <button onClick={() => router.refresh()}>Refresh Data</button>

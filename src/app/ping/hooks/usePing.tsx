@@ -1,12 +1,18 @@
 import { createStore } from '@/lib/zustand'
 import { useEffect, useMemo } from 'react'
 import socket from '../socket'
+import type { DataHost } from '../page'
 
-const _usePing = createStore({ hosts: [] as Host[], statusHost: {} as IStatusHost }, null, { nameStore: 'PING STORE' })
+type Status = { status: string; updatedAt: Date }
+export interface Host extends DataHost, Partial<Status> {}
+
+const initState = { hosts: [] as Host[] }
+const _usePing = createStore(initState, null, { nameStore: 'PING STORE' })
 const { setState, getState } = _usePing
+
 export const usePing = (_hosts: Host[]) => {
   useMemo(() => void setState(state => void (state.hosts.length == 0 && (state.hosts = _hosts)), false, { type: 'Init Host Data' }), [_hosts])
-  const { hosts, statusHost } = _usePing()
+  const { hosts } = _usePing()
   useEffect(() => {
     socket.connect()
     for (const { hostName } of _hosts) {
@@ -29,15 +35,5 @@ export const usePing = (_hosts: Host[]) => {
     }
     return () => void socket.disconnect()
   }, [_hosts])
-  return { hosts, statusHost }
-}
-type Status = { status: string; updatedAt: Date }
-type IStatusHost = {
-  [key: string]: Status
-}
-export interface Host extends Partial<Status> {
-  id: number
-  hostName: string
-  user: string
-  divisi: string
+  return { hosts }
 }
