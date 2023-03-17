@@ -1,5 +1,5 @@
 import Ping from './Ping'
-import type { ResBE } from '@/types/response'
+import type { ResBE } from '@/types'
 export interface DataHost {
   id: number
   hostName: string

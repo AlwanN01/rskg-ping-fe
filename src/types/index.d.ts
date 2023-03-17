@@ -18,3 +18,5 @@ export interface ResBE<T> {
   data?: T
   error?: unknown
 }
+
+export type SetRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>

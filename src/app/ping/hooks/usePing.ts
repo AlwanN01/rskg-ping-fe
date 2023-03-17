@@ -49,7 +49,7 @@ export const usePing = (_hosts: Host[]) => {
         )
       })
     }
-    return () => void socket.disconnect()
+    // return () => void socket.disconnect()
   }, [_hosts])
   return { hosts: getPageData(), activePage, setActivePage, setLimit, totalPage }
 }

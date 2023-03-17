@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import DynamicLink from '@/components/DynamicLink'
+
 const PingLayout = ({ children }: { children: React.ReactNode }) => (
   <>
     <header className='p-5'>
