@@ -20,13 +20,13 @@ const handlers = (set: SetState<State>, get: () => State) => ({
   }
 })
 
-const _usePing = createStore(initState, handlers, { nameStore: 'PING STORE' })
+const usePing_ = createStore(initState, handlers, { nameStore: 'PING STORE' })
 
-const { setState, getState } = _usePing
+const { setState, getState } = usePing_
 export const usePing = (_hosts: Host[]) => {
   useMemo(() => void setState(state => void (state.hosts.length == 0 && (state.hosts = _hosts)), false, { type: 'Init Host Data' }), [_hosts])
-  const { hosts } = _usePing()
-  const { activePage, limit, getPageData, setActivePage, setLimit } = getState()
+  // const {hosts, activePage, limit, getPageData, setActivePage, setLimit } = getState() tidak rerender ketika update
+  const { hosts, activePage, limit, getPageData, setActivePage, setLimit } = usePing_()
   const totalPage = useMemo(() => Math.ceil(hosts.length / limit), [hosts.length, limit])
 
   useEffect(() => {
