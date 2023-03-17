@@ -1,3 +1,6 @@
+declare global {
+  type Omit2<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+}
 type Pair<K = string> = { code: number; status: K }
 const pairs = (<T>(p: readonly Pair<T>[]) => p)([
   { code: 200, status: 'OK' },
