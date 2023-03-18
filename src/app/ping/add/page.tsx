@@ -6,6 +6,7 @@ export default function Page() {
   const [errMessage, setErrMessage] = useState('')
   const [issues, setIssues] = useState<any[]>([])
   const form = useForm<InitValue>({
+    initialValues: { hostName: '', divisi: '', user: '' },
     validate: {
       hostName: isNotEmpty('nama Host/IP wajib diisi'),
       divisi: isNotEmpty('nama Divisi wajib diisi'),
