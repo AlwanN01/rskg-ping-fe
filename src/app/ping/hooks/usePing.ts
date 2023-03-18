@@ -30,7 +30,7 @@ export const usePing = (_hosts: Host[]) => {
 
   // const {hosts, activePage, limit, getPageData, setActivePage, setLimit } = getState() tidak rerender ketika update
   const { hosts, activePage, limit, getPageData, setActivePage, setLimit } = usePing_()
-  const totalPage = useMemo(() => Math.ceil(hosts.length / limit), [hosts.length, limit])
+  const totalPage = Math.ceil(hosts.length / limit)
 
   useEffect(() => {
     socket.connect()
