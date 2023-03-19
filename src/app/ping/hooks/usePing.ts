@@ -1,6 +1,6 @@
 import { createStore, type SetState } from '@/lib/zustand'
 import { shallow } from 'zustand/shallow'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import socket from '../socket'
 import { useForceUpdate } from '@mantine/hooks'
 import orderBy from 'lodash/orderBy'
@@ -28,7 +28,10 @@ export const usePing = createStore(initState, handlers, { nameStore: 'PING STORE
 
 const { setState, getState } = usePing
 export const useListenPing = (_hosts: Host[]) => {
-  setState(state => void (!(getState().hosts.length === _hosts.length) && (state.hosts = _hosts)), false, { type: 'Init Host Data' })
+  useMemo(
+    () => void setState(state => void (!(getState().hosts.length === _hosts.length) && (state.hosts = _hosts)), false, { type: 'Init Host Data' }),
+    [_hosts]
+  )
   // const {hosts, activePage, limit, getPageData, setActivePage, setLimit } = getState() tidak rerender ketika update
   const hosts = getState().hosts
   const { limit, getPageData } = usePing(state => ({ limit: state.limit, getPageData: state.getPageData }), shallow)
