@@ -1,6 +1,8 @@
 import { createStore, type SetState } from '@/lib/zustand'
-import { useEffect, useMemo } from 'react'
+import { shallow } from 'zustand/shallow'
+import { useEffect } from 'react'
 import socket from '../socket'
+import { useForceUpdate } from '@mantine/hooks'
 import orderBy from 'lodash/orderBy'
 import type { DataHost } from '../page'
 
@@ -22,15 +24,16 @@ const handlers = (set: SetState<State>, get: () => State) => ({
   }
 })
 
-const usePing_ = createStore(initState, handlers, { nameStore: 'PING STORE' })
+export const usePing = createStore(initState, handlers, { nameStore: 'PING STORE' })
 
-const { setState, getState } = usePing_
-export const usePing = (_hosts: Host[]) => {
+const { setState, getState } = usePing
+export const useListenPing = (_hosts: Host[]) => {
   setState(state => void (!(getState().hosts.length === _hosts.length) && (state.hosts = _hosts)), false, { type: 'Init Host Data' })
-
   // const {hosts, activePage, limit, getPageData, setActivePage, setLimit } = getState() tidak rerender ketika update
-  const { hosts, activePage, limit, getPageData, setActivePage, setLimit } = usePing_()
+  const hosts = getState().hosts
+  const { limit, getPageData } = usePing(state => ({ limit: state.limit, getPageData: state.getPageData }), shallow)
   const totalPage = Math.ceil(hosts.length / limit)
+  const forceUpdate = useForceUpdate()
 
   useEffect(() => {
     socket.connect()
@@ -46,6 +49,7 @@ export const usePing = (_hosts: Host[]) => {
                 break
               }
             }
+            forceUpdate()
           },
           false,
           { type }
@@ -53,6 +57,6 @@ export const usePing = (_hosts: Host[]) => {
       })
     }
     return () => void socket.disconnect()
-  }, [_hosts])
-  return { hosts: getPageData(), activePage, setActivePage, setLimit, totalPage, orderBy }
+  }, [_hosts, forceUpdate])
+  return { hosts: getPageData(), totalPage }
 }

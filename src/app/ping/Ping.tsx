@@ -1,14 +1,20 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { usePing } from './hooks/usePing'
+import { useListenPing, usePing } from './hooks/usePing'
 import { type DataHost } from './page'
-import { Container, Pagination, Table, NumberInput, Group, ActionIcon, type NumberInputHandlers } from '@mantine/core'
+import { Container, Pagination, Table, NumberInput, Group, ActionIcon, type NumberInputHandlers, Button, Text } from '@mantine/core'
 import { useRef } from 'react'
 
 type IPing = { data: DataHost[]; children?: React.ReactNode }
 export default function Ping({ data }: IPing) {
-  const { hosts, setLimit, activePage, setActivePage, totalPage } = usePing(data)
+  const { hosts, totalPage } = useListenPing(data)
+  const setLimit = usePing.use.setLimit()
+  const activePage = usePing.use.activePage()
+  const setActivePage = usePing.use.setActivePage()
   const handlers = useRef<NumberInputHandlers>()
+  const renderTime = useRef(0)
+  renderTime.current++
+  console.log(`rendered ${renderTime.current} time`)
 
   return (
     <Container size={'xl'}>
