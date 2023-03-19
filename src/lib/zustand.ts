@@ -7,12 +7,7 @@ import type { Draft } from 'immer'
 export type SetState<State> = (
   nextStateOrUpdater: State | Partial<State> | ((state: Draft<State>) => void),
   shouldReplace?: boolean | undefined,
-  action?:
-    | string
-    | {
-        type: unknown
-      }
-    | undefined
+  action?: string | { type: unknown } | undefined
 ) => void
 export type HandlerStore<State, Method> = (set: SetState<State>, get: () => State) => Method
 export type ReducerStore<State, Action> = (state: State, action: Action, set: SetState<State>, get: () => State) => Promise<void> | void

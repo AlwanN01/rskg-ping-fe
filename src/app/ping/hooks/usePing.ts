@@ -10,21 +10,22 @@ type Status = { status: string; updatedAt: Date }
 // type OrderBy<T> = { [P in keyof T]?: boolean | undefined }
 export interface Host extends DataHost, Partial<Status> {}
 type OrderBy = keyof Host
-const initState = { hosts: [] as Host[], activePage: 1, limit: 10, orderBy: 'status' as OrderBy }
-type State = typeof initState
-const handlers = (set: SetState<State>, get: () => State) => ({
-  setActivePage: (page: number) => set({ activePage: page }, false, { type: `setActivePage to ${page}` }),
-  setLimit: (limit: number) => set({ limit, activePage: 1 }, false, { type: `setLimit to ${limit}` }),
-  setOrderBy: (orderBy: OrderBy) => set({ orderBy }),
-  getPageData: () => {
-    const sorteredHosts = orderBy(get().hosts, [get().orderBy, 'updatedAt'] as OrderBy[], ['asc', 'desc'])
-    const start = (get().activePage - 1) * get().limit
-    const end = start + get().limit
-    return sorteredHosts.slice(start, end)
-  }
-})
 
-export const usePing = createStore(initState, handlers, { nameStore: 'PING STORE' })
+export const usePing = createStore(
+  { hosts: [] as Host[], activePage: 1, limit: 10, orderBy: 'status' as OrderBy },
+  (set, get) => ({
+    setActivePage: (page: number) => set({ activePage: page }, false, { type: `setActivePage to ${page}` }),
+    setLimit: (limit: number) => set({ limit, activePage: 1 }, false, { type: `setLimit to ${limit}` }),
+    setOrderBy: (orderBy: OrderBy) => set({ orderBy }),
+    getPageData: () => {
+      const sorteredHosts = orderBy(get().hosts, [get().orderBy, 'updatedAt'] as OrderBy[], ['asc', 'desc'])
+      const start = (get().activePage - 1) * get().limit
+      const end = start + get().limit
+      return sorteredHosts.slice(start, end)
+    }
+  }),
+  { nameStore: 'PING STORE' }
+)
 
 const { setState, getState } = usePing
 export const useListenPing = (_hosts: Host[]) => {
