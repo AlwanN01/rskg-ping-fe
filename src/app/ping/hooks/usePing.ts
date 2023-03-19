@@ -30,7 +30,7 @@ export const usePing = createStore(
 const { setState, getState } = usePing
 export const useListenPing = (_hosts: Host[]) => {
   useMemo(
-    () => void setState(state => void (!(getState().hosts.length === _hosts.length) && (state.hosts = _hosts)), false, { type: 'Init Host Data' }),
+    () => void setState(state => void (!(state.hosts.length === _hosts.length) && (state.hosts = _hosts)), false, { type: 'Init Host Data' }),
     [_hosts]
   )
   // const {hosts, activePage, limit, getPageData, setActivePage, setLimit } = getState() tidak rerender ketika update
