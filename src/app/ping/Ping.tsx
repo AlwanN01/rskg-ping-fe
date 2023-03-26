@@ -11,6 +11,9 @@ export default function Ping({ data }: IPing) {
   const setLimit = usePing.use.setLimit()
   const activePage = usePing.use.activePage()
   const setActivePage = usePing.use.setActivePage()
+  const setOrderBy = usePing.use.setOrderBy()
+  setOrderBy('status')
+
   const handlers = useRef<NumberInputHandlers>()
   const renderTime = useRef(0)
   renderTime.current++

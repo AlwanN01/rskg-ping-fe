@@ -15,7 +15,11 @@ type Options = {
   nameStore?: string
   isLogging?: boolean
 }
-export function createStore<State extends object, Method extends object, Action extends { type: unknown; [key: string]: any }>(
+export function createStore<
+  State extends object,
+  Method extends TypeSetState<State> | object,
+  Action extends { type: String | keyof TypeSetState<State>; [key: string]: any }
+>(
   initState: State,
   handler?: HandlerStore<State, Method> | null,
   reducerOrOptions: ReducerStore<State, Action> | Options = {},
@@ -35,6 +39,7 @@ export function createStore<State extends object, Method extends object, Action 
               isLogging && console.log('new State', get())
             },
             set,
+            ...setStateStore(initState, set),
             ...handler!(set, get)
           }))
         ),
@@ -57,7 +62,18 @@ export function createSelectors<S extends UseBoundStore<StoreApi<object>>>(_stor
   return store
 }
 
-export type TypeSetState<T> = Partial<{
-  [K in keyof T as `set${Capitalize<string & K>}`]: (value: any) => void
-  // [K in keyof T as `set${Capitalize<string & K>}`]: (value:T[K]) => void
-}>
+export type TypeSetState<T> = {
+  [K in keyof T as `set${Capitalize<string & K>}`]: (value: T[K]) => void
+}
+
+const setStateStore = <T extends object>(initstate: T, set: SetState<T>) => {
+  let defaultSetState = {} as Record<string, (value: any) => void>
+  for (const key in initstate) {
+    if (Object.prototype.hasOwnProperty.call(initstate, key)) {
+      const keyName = key.charAt(0).toUpperCase() + key.slice(1)
+      // @ts-ignore
+      defaultSetState[`set${keyName}`] = (value: any) => set({ [key]: value }, false, { type: `set${keyName} to ${value}` })
+    }
+  }
+  return defaultSetState as TypeSetState<T>
+}
