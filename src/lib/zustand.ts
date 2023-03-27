@@ -51,12 +51,11 @@ export function createStore<
 function isOptions(variable: any): variable is Options {
   return Object.prototype.toString.call(variable) === '[object Object]'
 }
-type WithSelectors<S> = S extends { getState: () => infer T } ? S & { use: { [K in keyof T]: () => T[K] } } : never
+type WithSelectors<S> = S extends { getState: () => infer T } ? S & { [K in keyof T]: () => T[K] } : never
 export function createSelectors<S extends UseBoundStore<StoreApi<object>>>(_store: S) {
   let store = _store as WithSelectors<typeof _store>
-  store.use = {}
   for (let k of Object.keys(store.getState())) {
-    ;(store.use as any)[k] = () => store(s => s[k as keyof typeof s])
+    ;(store as any)[k] = () => store(s => s[k as keyof typeof s])
   }
 
   return store

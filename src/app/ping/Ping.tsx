@@ -8,10 +8,10 @@ import { useRef } from 'react'
 type IPing = { data: DataHost[]; children?: React.ReactNode }
 export default function Ping({ data }: IPing) {
   const { hosts, totalPage } = useListenPing(data)
-  const setLimit = usePing.use.setLimit()
-  const activePage = usePing.use.activePage()
-  const setActivePage = usePing.use.setActivePage()
-  const setOrderBy = usePing.use.setOrderBy()
+  const setLimit = usePing.setLimit()
+  const activePage = usePing.activePage()
+  const setActivePage = usePing.setActivePage()
+  const setOrderBy = usePing.setOrderBy()
   setOrderBy('status')
 
   const handlers = useRef<NumberInputHandlers>()
