@@ -15,8 +15,9 @@ type Options = {
   nameStore?: string
   isLogging?: boolean
 }
+
 export function createStore<
-  State extends object,
+  State extends Omit<Object, 'state'>,
   Method extends TypeSetState<State> | object,
   Action extends { type: String | keyof TypeSetState<State>; [key: string]: any }
 >(
