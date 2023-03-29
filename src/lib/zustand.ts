@@ -17,7 +17,7 @@ type Options = {
 }
 
 export function createStore<
-  State extends Omit<Object, 'state'>,
+  State extends Omit<object, 'state'>,
   Method extends TypeSetState<State> | object,
   Action extends { type: String | keyof TypeSetState<State>; [key: string]: any }
 >(
