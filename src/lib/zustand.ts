@@ -69,6 +69,7 @@ export type TypeSetState<T> = {
 const setStateStore = <T extends object>(initstate: T, set: SetState<T>) => {
   let defaultSetState = {} as Record<string, (value: any) => void>
   for (const key in initstate) {
+    if (key === 'state') continue
     if (Object.prototype.hasOwnProperty.call(initstate, key)) {
       const keyName = key.charAt(0).toUpperCase() + key.slice(1)
       // @ts-ignore

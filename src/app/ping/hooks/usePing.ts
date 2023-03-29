@@ -1,3 +1,4 @@
+'use client'
 import { createStore, type SetState } from '@/lib/zustand'
 import { shallow } from 'zustand/shallow'
 import { useEffect, useMemo } from 'react'
@@ -14,15 +15,15 @@ type OrderBy = keyof Host
 export const usePing = createStore(
   { hosts: [] as Host[], activePage: 1, limit: 10, orderBy: 'status' as OrderBy },
   (set, get) => ({
-    setActivePage: page => set({ activePage: page }, false, { type: `setActivePage to ${page}` }),
     setLimit: limit => set({ limit, activePage: 1 }, false, { type: `setLimit to ${limit}` }),
-    // setOrderBy: orderBy => set({ orderBy }),
     getPageData: () => {
       const sorteredHosts = orderBy(get().hosts, [get().orderBy, 'updatedAt'] as OrderBy[], ['asc', 'desc'])
       const start = (get().activePage - 1) * get().limit
       const end = start + get().limit
       return sorteredHosts.slice(start, end)
     }
+    // setActivePage: page => set({ activePage: page }, false, { type: `setActivePage to ${page}` }),
+    // setOrderBy: orderBy => set({ orderBy }),
   }),
   { nameStore: 'PING STORE' }
 )
@@ -53,11 +54,11 @@ export const useListenPing = (_hosts: Host[]) => {
                 break
               }
             }
-            forceUpdate()
           },
           false,
           { type }
         )
+        forceUpdate()
       })
     }
     return () => void socket.disconnect()

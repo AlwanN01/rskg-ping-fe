@@ -6,14 +6,12 @@ import { Container, Pagination, Table, NumberInput, Group, ActionIcon, type Numb
 import { useRef } from 'react'
 
 type IPing = { data: DataHost[]; children?: React.ReactNode }
-usePing.setState({ orderBy: 'user' })
+// usePing.setState({ orderBy: 'user' })
 export default function Ping({ data }: IPing) {
   const { hosts, totalPage } = useListenPing(data)
   const setLimit = usePing.setLimit()
   const activePage = usePing.activePage()
   const setActivePage = usePing.setActivePage()
-  // const setOrderBy = usePing.setOrderBy()
-  // setOrderBy('status')
   const handlers = useRef<NumberInputHandlers>()
   const renderTime = useRef(0)
   renderTime.current++
