@@ -39,7 +39,13 @@ export function createStore<
               set(reducerOrOptions ? await immerReducer!(get() as unknown as Immutable<State>, action, set, get) : state => state, false, action)
               isLogging && console.log('new State', get())
             },
-            set,
+            set: (value: Parameters<typeof set>[0]) =>
+              set(value, false, {
+                type:
+                  Object.keys(value).length == 1
+                    ? `set${Object.keys(value)[0].charAt(0).toUpperCase() + Object.keys(value)[0].slice(1)} to ${Object.values(value)[0]}`
+                    : `set: ${Object.keys(value).toLocaleString().replace(',', ' | ')}`
+              }),
             ...setStateStore(initState, set),
             ...handler!(set, get)
           }))
