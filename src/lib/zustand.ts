@@ -39,13 +39,19 @@ export function createStore<
               set(reducerOrOptions ? await immerReducer!(get() as unknown as Immutable<State>, action, set, get) : state => state, false, action)
               isLogging && console.log('new State', get())
             },
-            set: (value: Parameters<typeof set>[0]) =>
-              set(value, false, {
+            set: (value: Parameters<typeof set>[0]) => {
+              const key = Object.keys(value)
+              const values = Object.values(value)
+              return set(value, false, {
                 type:
-                  Object.keys(value).length == 1
-                    ? `set${Object.keys(value)[0].charAt(0).toUpperCase() + Object.keys(value)[0].slice(1)} to ${Object.values(value)[0]}`
-                    : `set: ${Object.keys(value).toLocaleString().replace(',', ' | ')}`
-              }),
+                  key.length == 1
+                    ? `set${key[0].charAt(0).toUpperCase() + key[0].slice(1)} to ${values[0]}`
+                    : typeof value == 'function'
+                    ? `set: ${extractString(value.toString())}`
+                    : `set: ${key.join(' | ')}`
+              })
+            },
+            get,
             ...setStateStore(initState, set),
             ...handler!(set, get)
           }))
@@ -83,4 +89,14 @@ const setStateStore = <T extends object>(initstate: T, set: SetState<T>) => {
     }
   }
   return defaultSetState as TypeSetState<T>
+}
+
+function extractString(str: string) {
+  const regex = /state\.(.*?)\s*=/g
+  let matches = []
+  let match
+  while ((match = regex.exec(str))) {
+    matches.push(match[1])
+  }
+  return matches.join(' | ')
 }
